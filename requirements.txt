@@ -1,0 +1,16 @@
+# Install the CUDA-compatible torch build for the target GPU separately.
+numpy==1.26.4
+opencv-python==4.11.0.86
+dxcam==0.0.5
+PyQt5==5.15.11
+winrt-runtime==3.2.1
+winrt-Windows.Media.Ocr==3.2.1
+pyaudiowpatch==0.2.12.8
+silero-vad==6.2.1
+onnxruntime-gpu==1.21.1
+ctranslate2==4.7.1
+faster-whisper==1.2.1
+transformers==4.51.3
+huggingface-hub==0.31.4
+bitsandbytes==0.45.5
+accelerate==1.6.0
