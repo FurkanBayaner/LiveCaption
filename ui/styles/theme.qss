@@ -1,0 +1,137 @@
+#controlPanel {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    font-family: "Segoe UI", Arial;
+}
+
+#controlPanel QLabel,
+#settingsLabel {
+    color: #888888;
+    font-size: 21px;
+}
+
+#controlPanel QComboBox {
+    background-color: #2b2b2b;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 22px;
+    padding: 12px 15px;
+}
+
+#controlPanel QComboBox:hover {
+    border: 1px solid #0078d7;
+}
+
+#controlPanel QComboBox::drop-down {
+    border: none;
+    width: 30px;
+}
+
+#controlPanel QComboBox::down-arrow {
+    image: none;
+    width: 0px;
+    height: 0px;
+}
+
+#controlPanel QComboBox QAbstractItemView {
+    background-color: #252525;
+    border: 1px solid #3a3a3a;
+    color: #e0e0e0;
+    outline: none;
+    selection-background-color: #0078d7;
+    selection-color: #ffffff;
+}
+
+#controlPanel QComboBox QAbstractItemView::item:hover {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+#fontWeightToggle {
+    color: #e0e0e0;
+    font-size: 21px;
+    spacing: 15px;
+}
+
+#fontWeightToggle::indicator {
+    background-color: #3d3d3d;
+    border: 1px solid #555555;
+    border-radius: 18px;
+    height: 36px;
+    width: 69px;
+}
+
+#fontWeightToggle::indicator:checked {
+    background-color: #0078d7;
+    border: 1px solid #005a9e;
+}
+
+#opacitySlider::groove:horizontal {
+    background-color: #3d3d3d;
+    border-radius: 5px;
+    height: 12px;
+}
+
+#opacitySlider::sub-page:horizontal {
+    background-color: #0078d7;
+    border-radius: 5px;
+}
+
+#opacitySlider::add-page:horizontal {
+    background-color: #3d3d3d;
+    border-radius: 5px;
+}
+
+#opacitySlider::handle:horizontal {
+    background-color: #e0e0e0;
+    border: 2px solid #0078d7;
+    border-radius: 15px;
+    height: 30px;
+    margin: -9px 0;
+    width: 30px;
+}
+
+#controlPanel QPushButton {
+    border: 1px solid transparent;
+    border-radius: 9px;
+    font-size: 21px;
+    font-weight: bold;
+    padding: 34px 0px;
+}
+
+#stopButton {
+    background-color: #3a1a1a;
+    color: #e05555;
+}
+
+#stopButton:hover {
+    background-color: #c0392b;
+    color: #ffffff;
+}
+
+#startAsrButton {
+    background-color: #1a2a3a;
+    color: #5599dd;
+}
+
+#startAsrButton:hover {
+    background-color: #0078d7;
+    color: #ffffff;
+}
+
+#startOcrButton {
+    background-color: #1a3020;
+    color: #55aa77;
+}
+
+#startOcrButton:hover {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+#controlPanel QPushButton:disabled {
+    background-color: #252525;
+    border: 1px solid #333333;
+    color: #555555;
+}
