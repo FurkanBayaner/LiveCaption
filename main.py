@@ -6,6 +6,8 @@ import sys
 from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
+from logging_config import configure_logging
+
 if TYPE_CHECKING:
     from PyQt5.QtWidgets import QApplication
 
@@ -24,6 +26,7 @@ def initialize_components(application: QApplication) -> None:
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Start the Qt event loop."""
+    configure_logging()
     application = create_application(argv)
     initialize_components(application)
     return application.exec_()
