@@ -135,3 +135,29 @@
     border: 1px solid #333333;
     color: #555555;
 }
+
+#selectionCancelButton {
+    background-color: #c0392b;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#selectionCancelButton:hover {
+    background-color: #a93226;
+    color: #ffffff;
+}
+
+#selectionConfirmButton {
+    background-color: #27ae60;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#selectionConfirmButton:hover {
+    background-color: #1e8449;
+    color: #ffffff;
+}
