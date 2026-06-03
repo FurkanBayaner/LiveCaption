@@ -10,6 +10,7 @@ from translation.model_registry import (
     TranslationModelSpec,
     get_translation_model,
 )
+from translation.engine_errors import TranslationEngineError
 
 __all__ = [
     "DEFAULT_TRANSLATION_ENGINE",
@@ -18,6 +19,7 @@ __all__ = [
     "TRANSLATION_MODEL_REGISTRY",
     "TRANSLATION_MODELS",
     "TranslationEngineType",
+    "TranslationEngineError",
     "TranslationModelSpec",
     "get_translation_model",
 ]
