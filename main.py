@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     from core.pipeline_manager import PipelineManager
     from core.signals import ApplicationSignals
     from ui.control_panel import ControlPanel
+    from ui.ocr.ocr_debug_coordinator import OCRDebugCoordinator
+    from ui.overlay_coordinator import OverlayCoordinator
     from ui.selection_coordinator import SelectionCoordinator
 
 
@@ -26,6 +28,8 @@ class RuntimeComponents:
     pipeline_manager: PipelineManager
     control_panel: ControlPanel
     selection_coordinator: SelectionCoordinator
+    overlay_coordinator: OverlayCoordinator
+    ocr_debug_coordinator: OCRDebugCoordinator
 
 
 def create_application(argv: Sequence[str] | None = None) -> QApplication:
@@ -40,6 +44,8 @@ def initialize_components(application: QApplication) -> RuntimeComponents:
     from core.pipeline_manager import PipelineManager
     from core.signals import ApplicationSignals
     from ui.control_panel import ControlPanel
+    from ui.ocr.ocr_debug_coordinator import OCRDebugCoordinator
+    from ui.overlay_coordinator import OverlayCoordinator
     from ui.selection_coordinator import SelectionCoordinator
 
     signals = ApplicationSignals(application)
@@ -52,11 +58,15 @@ def initialize_components(application: QApplication) -> RuntimeComponents:
     control_panel = ControlPanel(signals)
     control_panel.show()
     selection_coordinator = SelectionCoordinator(signals, control_panel)
+    overlay_coordinator = OverlayCoordinator(signals, control_panel.overlay_settings())
+    ocr_debug_coordinator = OCRDebugCoordinator(signals)
     return RuntimeComponents(
         signals=signals,
         pipeline_manager=pipeline_manager,
         control_panel=control_panel,
         selection_coordinator=selection_coordinator,
+        overlay_coordinator=overlay_coordinator,
+        ocr_debug_coordinator=ocr_debug_coordinator,
     )
 
 

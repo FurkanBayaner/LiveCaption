@@ -13,6 +13,7 @@ class ApplicationSignals(QObject):
     start_ocr_requested = pyqtSignal(object, object)
     start_asr_requested = pyqtSignal(object)
     stop_requested = pyqtSignal()
+    ocr_debug_preview_requested = pyqtSignal()
     overlay_settings_changed = pyqtSignal(object)
     translation_engine_changed = pyqtSignal(str)
 

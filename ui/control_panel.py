@@ -69,7 +69,7 @@ class ControlPanel(QWidget):
 
         self.setObjectName("controlPanel")
         self.setWindowTitle("Live Caption")
-        self.setFixedSize(870, 810)
+        self.setFixedSize(870, 780)
 
         self._create_controls()
         self._build_layout()
@@ -116,6 +116,9 @@ class ControlPanel(QWidget):
         self.font_weight_toggle = QCheckBox()
         self.font_weight_toggle.setObjectName("fontWeightToggle")
         self.font_weight_toggle.setChecked(DEFAULT_FONT_WEIGHT_ACTIVE)
+        self.debug_button = QPushButton("Debug")
+        self.debug_button.setObjectName("debugButton")
+        self.debug_button.setEnabled(False)
         self.font_weight_control = self._font_weight_control()
 
         self.opacity_value_label = QLabel()
@@ -184,8 +187,10 @@ class ControlPanel(QWidget):
             self._signals.translation_engine_changed
         )
         self.stop_button.clicked.connect(self._signals.stop_requested)
+        self.debug_button.clicked.connect(self._signals.ocr_debug_preview_requested)
         self.start_asr_button.clicked.connect(self._signals.asr_selection_requested)
         self.start_ocr_button.clicked.connect(self._signals.ocr_selection_requested)
+        self._signals.start_ocr_requested.connect(self._enable_debug_button)
         self._signals.state_changed.connect(self.set_app_state)
 
     def _load_theme(self) -> None:
@@ -225,6 +230,10 @@ class ControlPanel(QWidget):
 
     def _update_opacity_label(self, value: int) -> None:
         self.opacity_value_label.setText(f"%{value}")
+
+    def _enable_debug_button(self, *regions: object) -> None:
+        del regions
+        self.debug_button.setEnabled(True)
 
     @staticmethod
     def _combo(values: object, default: object, *, suffix: str = "") -> QComboBox:
@@ -283,4 +292,5 @@ class ControlPanel(QWidget):
         layout.addWidget(active_label)
         layout.addWidget(self.font_weight_toggle)
         layout.addStretch(1)
+        layout.addWidget(self.debug_button)
         return widget
