@@ -32,16 +32,18 @@ from config import (
     DEFAULT_LINE_SPACING,
     DEFAULT_SPEAKER_COLOR,
     DEFAULT_TEXT_COLOR,
-    DEFAULT_TRANSLATION_ENGINE,
     FONT_FAMILIES,
     FONT_SIZES_PX,
     LETTER_SPACING_OPTIONS_PX,
     LINE_SPACING_OPTIONS,
-    TRANSLATION_ENGINES,
 )
 from core.app_state import AppState
 from core.signals import ApplicationSignals
 from core.types import OverlaySettings
+from translation.model_registry import (
+    DEFAULT_TRANSLATION_ENGINE,
+    TRANSLATION_ENGINE_NAMES,
+)
 
 THEME_PATH = Path(__file__).resolve().parent / "styles" / "theme.qss"
 LOGGER = logging.getLogger(__name__)
@@ -110,7 +112,7 @@ class ControlPanel(QWidget):
         self.speaker_color_combo = self._combo(COLOR_PALETTE, DEFAULT_SPEAKER_COLOR)
         self.text_color_combo = self._combo(COLOR_PALETTE, DEFAULT_TEXT_COLOR)
         self.translation_engine_combo = self._combo(
-            TRANSLATION_ENGINES, DEFAULT_TRANSLATION_ENGINE
+            TRANSLATION_ENGINE_NAMES, DEFAULT_TRANSLATION_ENGINE
         )
 
         self.font_weight_toggle = QCheckBox()

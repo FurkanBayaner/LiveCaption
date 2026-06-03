@@ -4,6 +4,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from translation.model_registry import (
+    DEFAULT_TRANSLATION_ENGINE,
+    LLM_MODELS_DIR,
+    MARIAN_MODELS_DIR,
+    TRANSLATION_ENGINE_NAMES,
+    get_translation_model,
+    TRANSLATION_MODELS_DIR,
+)
+
 PROJECT_ROOT = Path(__file__).resolve().parent
 MODELS_DIR = PROJECT_ROOT / "models"
 LOGS_DIR = PROJECT_ROOT / "logs"
@@ -20,20 +29,11 @@ ASR_MAX_WAIT_SECONDS = 10.0
 WHISPER_MODEL_NAME = "medium"
 WHISPER_MODEL_DIR = MODELS_DIR / "whisper"
 
-TRANSLATION_MODELS_DIR = MODELS_DIR / "translation"
-LLM_MODELS_DIR = TRANSLATION_MODELS_DIR / "llm"
-MARIAN_MODELS_DIR = TRANSLATION_MODELS_DIR / "marian"
-DEFAULT_TRANSLATION_ENGINE = "Qwen3 1.7B"
-TRANSLATION_ENGINES = (
-    "Qwen3 1.7B",
-    "Qwen3.5 2B",
-    "Gemma 2 2B",
-    "Qwen2.5 Coder 1.5B",
-    "Gemma 3 1B",
-    "Llama 3.2 1B",
-    "MarianMT",
-)
-MARIAN_MODEL_NAME = "Helsinki-NLP/opus-mt-en-tr"
+TRANSLATION_ENGINES = TRANSLATION_ENGINE_NAMES
+_MARIAN_MODEL = get_translation_model("MarianMT")
+if _MARIAN_MODEL.source_model_name is None:
+    raise ValueError("MarianMT must define a source model name.")
+MARIAN_MODEL_NAME = _MARIAN_MODEL.source_model_name
 LLM_LOAD_IN_8BIT = True
 
 DEFAULT_FONT_FAMILY = "Arial"
