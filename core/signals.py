@@ -16,6 +16,7 @@ class ApplicationSignals(QObject):
     ocr_debug_preview_requested = pyqtSignal()
     overlay_settings_changed = pyqtSignal(object)
     translation_engine_changed = pyqtSignal(str)
+    translation_engine_switch_failed = pyqtSignal(str, str)
 
     state_changed = pyqtSignal(object)
     pipeline_error = pyqtSignal(str)

@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 from ctypes import wintypes
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QMouseEvent, QShowEvent
 from PyQt5.QtWidgets import (
     QCheckBox,
@@ -77,6 +77,7 @@ class ControlPanel(QWidget):
         self._build_layout()
         self._connect_signals()
         self._load_theme()
+        self._style_translation_status_label()
         self.set_app_state(AppState.IDLE)
 
     def overlay_settings(self) -> OverlaySettings:
@@ -114,6 +115,13 @@ class ControlPanel(QWidget):
         self.translation_engine_combo = self._combo(
             TRANSLATION_ENGINE_NAMES, DEFAULT_TRANSLATION_ENGINE
         )
+        self.translation_status_label = QLabel()
+        self.translation_status_label.setObjectName("translationStatusLabel")
+        self.translation_status_label.setParent(self)
+        self.translation_status_label.setVisible(False)
+        self._translation_status_timer = QTimer(self)
+        self._translation_status_timer.setSingleShot(True)
+        self._translation_status_timer.timeout.connect(self.translation_status_label.hide)
 
         self.font_weight_toggle = QCheckBox()
         self.font_weight_toggle.setObjectName("fontWeightToggle")
@@ -188,6 +196,9 @@ class ControlPanel(QWidget):
         self.translation_engine_combo.currentTextChanged.connect(
             self._signals.translation_engine_changed
         )
+        self._signals.translation_engine_switch_failed.connect(
+            self._show_translation_engine_error
+        )
         self.stop_button.clicked.connect(self._signals.stop_requested)
         self.debug_button.clicked.connect(self._signals.ocr_debug_preview_requested)
         self.start_asr_button.clicked.connect(self._signals.asr_selection_requested)
@@ -197,6 +208,11 @@ class ControlPanel(QWidget):
 
     def _load_theme(self) -> None:
         self.setStyleSheet(THEME_PATH.read_text(encoding="utf-8"))
+
+    def _style_translation_status_label(self) -> None:
+        self.translation_status_label.setStyleSheet(
+            "color: #e05555; font-size: 15px;"
+        )
 
     def _enable_dark_title_bar(self) -> None:
         if sys.platform != "win32":
@@ -236,6 +252,33 @@ class ControlPanel(QWidget):
     def _enable_debug_button(self, *regions: object) -> None:
         del regions
         self.debug_button.setEnabled(True)
+
+    def _set_active_translation_engine(self, display_name: str) -> None:
+        if self.translation_engine_combo.currentText() == display_name:
+            return
+        previous_block_state = self.translation_engine_combo.blockSignals(True)
+        self.translation_engine_combo.setCurrentText(display_name)
+        self.translation_engine_combo.blockSignals(previous_block_state)
+
+    def _show_translation_engine_error(self, active_engine: str, failed_engine: str) -> None:
+        self._set_active_translation_engine(active_engine)
+        self.translation_status_label.setText(
+            f"Translation model is unavailable: {failed_engine}"
+        )
+        self._position_translation_status()
+        self.translation_status_label.setVisible(True)
+        self._translation_status_timer.start(3000)
+
+    def _position_translation_status(self) -> None:
+        top_left = self.translation_engine_combo.mapTo(
+            self, self.translation_engine_combo.rect().bottomLeft()
+        )
+        self.translation_status_label.setGeometry(
+            top_left.x(),
+            top_left.y() + 6,
+            self.translation_engine_combo.width(),
+            24,
+        )
 
     @staticmethod
     def _combo(values: object, default: object, *, suffix: str = "") -> QComboBox:

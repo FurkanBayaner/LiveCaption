@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from ui.ocr.ocr_debug_coordinator import OCRDebugCoordinator
     from ui.overlay_coordinator import OverlayCoordinator
     from ui.selection_coordinator import SelectionCoordinator
+    from translation.translation_router import TranslationRouter
 
 
 @dataclass(frozen=True, slots=True)
@@ -30,6 +31,7 @@ class RuntimeComponents:
     selection_coordinator: SelectionCoordinator
     overlay_coordinator: OverlayCoordinator
     ocr_debug_coordinator: OCRDebugCoordinator
+    translation_router: TranslationRouter
 
 
 def create_application(argv: Sequence[str] | None = None) -> QApplication:
@@ -47,6 +49,7 @@ def initialize_components(application: QApplication) -> RuntimeComponents:
     from ui.ocr.ocr_debug_coordinator import OCRDebugCoordinator
     from ui.overlay_coordinator import OverlayCoordinator
     from ui.selection_coordinator import SelectionCoordinator
+    from translation.translation_router import TranslationRouter
 
     signals = ApplicationSignals(application)
     pipeline_manager = PipelineManager(
@@ -60,6 +63,15 @@ def initialize_components(application: QApplication) -> RuntimeComponents:
     selection_coordinator = SelectionCoordinator(signals, control_panel)
     overlay_coordinator = OverlayCoordinator(signals, control_panel.overlay_settings())
     ocr_debug_coordinator = OCRDebugCoordinator(signals)
+    translation_router = TranslationRouter(error_listener=signals.pipeline_error.emit)
+
+    def switch_translation_engine(display_name: str) -> None:
+        changed = translation_router.switch_engine(display_name)
+        active_engine = translation_router.active_engine_name
+        if not changed and active_engine != display_name:
+            signals.translation_engine_switch_failed.emit(active_engine, display_name)
+
+    signals.translation_engine_changed.connect(switch_translation_engine)
     return RuntimeComponents(
         signals=signals,
         pipeline_manager=pipeline_manager,
@@ -67,6 +79,7 @@ def initialize_components(application: QApplication) -> RuntimeComponents:
         selection_coordinator=selection_coordinator,
         overlay_coordinator=overlay_coordinator,
         ocr_debug_coordinator=ocr_debug_coordinator,
+        translation_router=translation_router,
     )
 
 
