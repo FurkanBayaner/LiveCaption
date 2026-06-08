@@ -4,7 +4,10 @@ opencv-python==4.11.0.86
 dxcam==0.0.5
 PyQt5==5.15.11
 winrt-runtime==3.2.1
+winrt-Windows.Globalization==3.2.1
+winrt-Windows.Graphics.Imaging==3.2.1
 winrt-Windows.Media.Ocr==3.2.1
+winrt-Windows.Storage.Streams==3.2.1
 pyaudiowpatch==0.2.12.8
 silero-vad==6.2.1
 onnxruntime-gpu==1.21.1
