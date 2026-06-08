@@ -49,6 +49,7 @@ def initialize_components(application: QApplication) -> RuntimeComponents:
     from ui.ocr.ocr_debug_coordinator import OCRDebugCoordinator
     from ui.overlay_coordinator import OverlayCoordinator
     from ui.selection_coordinator import SelectionCoordinator
+    from ocr.ocr_pipeline import OCRPipeline
     from translation.translation_router import TranslationRouter
 
     signals = ApplicationSignals(application)
@@ -57,6 +58,7 @@ def initialize_components(application: QApplication) -> RuntimeComponents:
         error_listener=signals.pipeline_error.emit,
     )
     signals.stop_requested.connect(pipeline_manager.stop_active)
+    signals.ocr_pipeline_finished.connect(pipeline_manager.stop_active)
 
     control_panel = ControlPanel(signals)
     control_panel.show()
@@ -72,6 +74,22 @@ def initialize_components(application: QApplication) -> RuntimeComponents:
             signals.translation_engine_switch_failed.emit(active_engine, display_name)
 
     signals.translation_engine_changed.connect(switch_translation_engine)
+
+    def start_ocr_pipeline(subtitle_region: object, translation_region: object) -> None:
+        del translation_region
+        pipeline = OCRPipeline(
+            subtitle_region=subtitle_region,
+            translation_router=translation_router,
+            text_listener=signals.ocr_translation_ready.emit,
+            error_listener=signals.pipeline_error.emit,
+            stop_listener=signals.ocr_overlay_clear_requested.emit,
+            finish_listener=signals.ocr_pipeline_finished.emit,
+        )
+        started = pipeline_manager.start_ocr(pipeline)
+        if not started:
+            signals.ocr_overlay_clear_requested.emit()
+
+    signals.start_ocr_requested.connect(start_ocr_pipeline)
     return RuntimeComponents(
         signals=signals,
         pipeline_manager=pipeline_manager,

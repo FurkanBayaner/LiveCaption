@@ -20,6 +20,8 @@ class OverlayCoordinator(QObject):
         self.asr_overlay = ASROverlay(settings)
 
         signals.overlay_settings_changed.connect(self.apply_settings)
+        signals.ocr_translation_ready.connect(self.update_ocr_text)
+        signals.ocr_overlay_clear_requested.connect(self.hide_ocr)
         signals.start_ocr_requested.connect(self._show_ocr_from_selection)
         signals.start_asr_requested.connect(self.show_asr)
         signals.stop_requested.connect(self.hide_all)
@@ -52,6 +54,11 @@ class OverlayCoordinator(QObject):
         for overlay in (self.ocr_overlay, self.asr_overlay):
             overlay.clear_text()
             overlay.hide()
+
+    def hide_ocr(self) -> None:
+        """Hide and clear the OCR overlay without affecting ASR."""
+        self.ocr_overlay.clear_text()
+        self.ocr_overlay.hide()
 
     def _show_ocr_from_selection(
         self, subtitle_region: ScreenRegion, translation_region: ScreenRegion
