@@ -85,14 +85,19 @@ class PipelineManager:
             )
             return False
 
+        self._active_pipeline = pipeline
+        self._active_mode = mode
         try:
             pipeline.start()
         except Exception as exc:  # Pipeline failures must not close the app.
+            self._active_pipeline = None
+            self._active_mode = None
             self._report_error(f"Failed to start {mode.value} pipeline.", exc)
             return False
 
-        self._active_pipeline = pipeline
-        self._active_mode = mode
+        if self._active_pipeline is not pipeline:
+            return False
+
         state = AppState.OCR_RUNNING if mode is PipelineMode.OCR else AppState.ASR_RUNNING
         self._set_state(state)
         return True

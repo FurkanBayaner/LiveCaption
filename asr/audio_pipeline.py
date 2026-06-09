@@ -85,7 +85,11 @@ class ASRAudioPipeline:
         """Stop capture, flush no extra audio, and clear buffered speech."""
         self._stop_event.set()
         thread = self._thread
-        if thread is not None and thread.is_alive():
+        if (
+            thread is not None
+            and thread.is_alive()
+            and threading.current_thread() is not thread
+        ):
             thread.join(timeout=2.0)
 
         self._cleanup()

@@ -100,8 +100,9 @@ class ControlPanel(QWidget):
 
     def set_app_state(self, state: AppState) -> None:
         """Reflect the Pipeline Manager state without making mode decisions."""
-        self.start_ocr_button.setEnabled(state is not AppState.ASR_RUNNING)
-        self.start_asr_button.setEnabled(state is not AppState.OCR_RUNNING)
+        is_idle = state is AppState.IDLE
+        self.start_ocr_button.setEnabled(is_idle)
+        self.start_asr_button.setEnabled(is_idle)
 
     def _create_controls(self) -> None:
         self.font_family_combo = self._combo(FONT_FAMILIES, DEFAULT_FONT_FAMILY)
